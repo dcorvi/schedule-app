@@ -1,35 +1,64 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, ScrollView } from 'react-native';
-import GetEventsForm from '../components/getEventsForm.js';
+import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 
 
-export default class GetEventsScreen extends React.Component {
-  storeEvents = (data) => {
-    this.props.navigation.navigate('DeleteEvent', { events: data });
+export default class GetEventsForm extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      day: '',
+      month: '',
+      year: '',
+      events: []
+    }
   }
 
-  static navigationOptions = {
-    title: 'Search Events'
+  getEvents = () => {
+    let URL = `https://event-sched-backend.herokuapp.com/api/retrieve`;
+
+    fetch(URL, {
+      headers: {
+            'Content-Type': 'application/json',
+            'year': this.state.year,
+            'day': this.state.day,
+            'month': this.state.month
+        }
+    }).then(response => response.json())
+      .then(data => this.props.storeEvents(data));
   }
 
   render() {
+    console.log(this.state.events);
+
     return (
       <View style={styles.container}>
-        <ScrollView>
 
-          <Text style={styles.large_info}>
-            Fill out the fields below to retrieve events for a given time frame...
-          </Text>
-          <Text style={styles.small_info}>***Year is required***</Text>
+        <Text style={styles.label_text}>Day</Text>
+        <TextInput
+          style={styles.num_input}
+          onChangeText={(text) => this.setState({ day: text })}
+          value={this.state.day}
+        />
 
-          <GetEventsForm storeEvents={this.storeEvents} />
+        <Text style={styles.label_text}>Month</Text>
+        <TextInput
+          style={styles.num_input}
+          onChangeText={(text) => this.setState({ month: text })}
+          value={this.state.month}
+        />
 
-        </ScrollView>
+        <Text style={styles.label_text}>Year</Text>
+        <TextInput
+          style={styles.num_input}
+          onChangeText={(text) => this.setState({ year: text })}
+          value={this.state.year}
+        />
 
-        <View style={styles.schedule_btn}>
+        <View style={{ paddingTop: 30 }}>
           <Button
-            title="Go to Schedule Events"
-            onPress={() => this.props.navigation.navigate('SaveEvent')}
+            title="Get Events"
+            onPress={this.getEvents}
           />
         </View>
 
@@ -38,30 +67,25 @@ export default class GetEventsScreen extends React.Component {
   }
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: 20
+    padding: '10%',
   },
 
-  large_info: {
-    fontSize: 20,
-    paddingLeft: '10%',
-    paddingRight: '10%',
-    textAlign: 'center'
+  num_input: {
+    height: 40,
+    borderColor: 'grey',
+    backgroundColor: 'lightgrey',
+    borderRadius: 10,
+    padding: 5,
   },
 
-  small_info: {
-    fontSize: 12,
-    textAlign: 'center',
-    fontStyle: 'italic',
-  },
-
-  schedule_btn: {
-    flex: 1,
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
+  label_text: {
+    paddingTop: 30,
+    paddingBottom: 10,
+    fontWeight: 'bold',
   }
 });

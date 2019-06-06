@@ -7,12 +7,12 @@ export default class SaveEventsScreen extends React.Component {
   }
 
   render() {
-  return (
-    <View style={styles.container}>
-      <Text>Save Event</Text>
-    </View>
-  );
-}
+    return (
+      <View style={styles.container}>
+        <Text>Save an Event</Text>
+      </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

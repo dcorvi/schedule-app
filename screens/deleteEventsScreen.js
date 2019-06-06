@@ -28,7 +28,7 @@ export default class DeleteEventsScreen extends React.Component {
         <FlatList
           data={this.state.events}
           renderItem={( {item} ) =>
-            <View>
+            <View style={{ paddingTop: 25 }}>
               <Text>{item.title} - {item.month}/{item.day}/{item.year}</Text>
               <Button title="Remove" onPress={() => this.removeEvent(item.id)} />
             </View>
